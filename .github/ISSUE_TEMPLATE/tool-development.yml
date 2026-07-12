@@ -7,7 +7,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        提交前请阅读 `AGENTS.md`。一次申请最多包含 3 个同能力族工具。管理员确认 `toolId`、executor/operation、公共文件占用和数据库迁移后才能开始编码。
+        提交前请阅读 `AGENTS.md` 和 `docs/developer-tool-workflow.zh-CN.md`。一次申请最多包含 3 个同能力族工具。
+
+        **开发者不需要预先懂 executor、operation、公共文件或 Flyway。** 请先把对标截图、目标行为和验收标准交给 AI，让 AI 只分析代码和架构、不编码，并生成本 Issue 草稿。无法确定的字段填写“待 AI/管理员确认”，由管理员批准后才能开始编码。
 
         Read `AGENTS.md` before submitting. One request may contain at most three tools from the same capability family. Coding starts only after administrator approval.
 
@@ -54,6 +56,7 @@ body:
     id: executor
     attributes:
       label: 计划复用的能力族 / Planned Executor
+      description: 不确定时选择“待架构确认”，禁止凭感觉新建执行器。
       options:
         - llm-template
         - image-generation
@@ -70,8 +73,8 @@ body:
     id: operations
     attributes:
       label: Operation 设计 / Planned Operations
-      description: 为每个工具填写稳定英文 operation；llm-template 可说明不需要。
-      placeholder: pdf-merge, pdf-split
+      description: 优先填写 AI 阅读代码后的建议；仍不确定时填写“待 AI/管理员确认”。llm-template 可说明不需要。
+      placeholder: pdf-merge, pdf-split；或：待 AI/管理员确认
     validations:
       required: true
 
@@ -88,8 +91,8 @@ body:
     id: shared_files
     attributes:
       label: 预计修改的公共能力 / Shared Files or Capabilities
-      description: 执行器、动态表单、协议 DTO、路由、历史记录、附件等。
-      placeholder: DocumentProcessingToolExecutor, tool_runner_page.dart
+      description: 由 AI 阅读代码后列出执行器、动态表单、协议 DTO、路由、历史记录、附件等；不确定时明确填写待确认。
+      placeholder: DocumentProcessingToolExecutor, tool_runner_page.dart；或：待 AI/管理员确认
     validations:
       required: true
 
