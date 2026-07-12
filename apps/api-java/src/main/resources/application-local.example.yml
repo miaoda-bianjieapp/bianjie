@@ -1,4 +1,33 @@
+server:
+  port: 8080
+  # 手机通过局域网访问电脑后端时可保留；使用 adb reverse 时也不会有副作用。
+  address: 0.0.0.0
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bianjie
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: your-postgres-password
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/postgresql
+
 bianjie:
+  catalog:
+    admin-enabled: true
   ai:
     gateway:
       provider: openai-compatible

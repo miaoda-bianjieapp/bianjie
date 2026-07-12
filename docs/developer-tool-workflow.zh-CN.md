@@ -2,6 +2,8 @@
 
 本文面向参与“功能”和“写作”工具开发的同事，说明从获取项目到发起 Pull Request（PR）的完整流程。架构约束以根目录 `AGENTS.md` 为准；本文负责说明实际操作方法和可直接交给 AI 的提示词。
 
+仓库管理员的 Issue 审批、任务登记、PR Review、CI、Flyway、真机抽测和合并流程见 `docs/administrator-workflow.zh-CN.md`。
+
 ## 一、先理解四个协作对象
 
 | 对象 | 用途 | 谁负责 |
@@ -238,10 +240,10 @@ PR 创建后 GitHub 自动运行：
 ```powershell
 git switch main
 git pull --ff-only origin main
-git branch -d dev/<姓名>/<已合并主题>
+git branch -D dev/<姓名>/<已合并主题>
 ```
 
-`git branch -d` 只删除本地已合并分支，不会删除 `main` 中的代码或 GitHub PR 历史。下一个任务重新从最新 `main` 创建新分支，不复用旧分支。
+执行 `-D` 前必须先在 GitHub 确认 PR 状态为 `Merged`，并确认最新 `main` 已包含该 PR。项目采用 Squash Merge，原个人分支提交不会原样成为 `main` 的祖先，因此安全删除参数 `-d` 可能拒绝删除；这里的 `-D` 只用于删除已经确认合并的本地旧分支，不会删除 `main` 中的代码、远程仓库内容或 GitHub PR 历史。未合并或无法确认的分支禁止强制删除。下一个任务重新从最新 `main` 创建新分支，不复用旧分支。
 
 ## 十三、最短流程清单
 

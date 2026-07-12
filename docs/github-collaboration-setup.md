@@ -125,6 +125,8 @@ Do not add placeholder usernames. Add CODEOWNERS only after real GitHub accounts
 
 面向开发者的逐步中文操作、Issue 预分析提示词、AI 开发提示词和 PR 提示词见 `docs/developer-tool-workflow.zh-CN.md`。
 
+面向管理员的成员权限、Issue 审批、任务看板、PR Review、CI、Flyway、真机抽测、Squash Merge 和异常处理见 `docs/administrator-workflow.zh-CN.md`。
+
 1. Developer opens a **Tool Development Request** Issue and attaches sanitized reference screenshots.
 2. Administrator confirms scope, tool IDs, executor/operations, shared files, and migration need.
 3. Administrator adds one row to `TOOL_DEVELOPMENT_BOARD.md` and replies to the Issue with the assigned task ID and branch name.
