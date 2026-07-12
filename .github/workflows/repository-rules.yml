@@ -1,0 +1,32 @@
+name: Repository Rules
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-rules-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  repository-rules:
+    name: Secrets, generated files, and Flyway rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check repository rules
+        run: bash .github/scripts/check-repository-rules.sh

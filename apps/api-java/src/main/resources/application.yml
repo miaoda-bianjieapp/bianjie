@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bianjie-ai-api
+  datasource:
+    url: jdbc:h2:mem:bianjie_ai;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: false
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+bianjie:
+  ai:
+    gateway:
+      provider: ${BIANJIE_AI_GATEWAY_PROVIDER:}
+      base-url: ${BIANJIE_AI_GATEWAY_BASE_URL:}
+      api-key: ${BIANJIE_AI_GATEWAY_API_KEY:}
+      default-model: ${BIANJIE_AI_GATEWAY_DEFAULT_MODEL:}
+      timeout-seconds: ${BIANJIE_AI_GATEWAY_TIMEOUT_SECONDS:60}

@@ -1,0 +1,28 @@
+# Workspace-local agent and IDE state
+.agents/
+.idea/
+*.iml
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+**/application-local.yml
+**/android/local.properties
+*.jks
+*.keystore
+
+# Generated output (subprojects also define their own ignores)
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/build/
+**/target/
+**/data/
+*.apk
+*.aab
+*.class
+
+# OS files
+.DS_Store
+Thumbs.db

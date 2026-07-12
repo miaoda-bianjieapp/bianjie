@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/bianjie_ai
+    driver-class-name: org.postgresql.Driver
+    username: bianjie
+    password: replace-with-your-password
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/postgresql
+

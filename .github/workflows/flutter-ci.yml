@@ -1,0 +1,156 @@
+name: Flutter CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      build_android_debug:
+        description: 'Also build the Android debug APK for native integration verification'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flutter-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect Flutter changes
+    runs-on: ubuntu-latest
+    outputs:
+      flutter: ${{ steps.filter.outputs.flutter }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect relevant paths
+        id: filter
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" || -z "$BASE_SHA" || "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            echo "flutter=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --quiet "$BASE_SHA" HEAD -- apps/app .github/workflows/flutter-ci.yml AGENTS.md; then
+            echo "flutter=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "flutter=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  analyze-and-test:
+    name: Flutter format, analyze, and test
+    needs: changes
+    if: needs.changes.outputs.flutter == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: apps/app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter 3.24.5
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: stable
+          cache: true
+          cache-key: flutter-3.24.5-${{ runner.os }}-${{ hashFiles('apps/app/pubspec.lock') }}
+
+      - name: Verify Flutter and Dart
+        run: |
+          flutter --version
+          dart --version
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        run: flutter test --reporter expanded
+
+  android-debug-build:
+    name: Optional Android debug build
+    if: github.event_name == 'workflow_dispatch' && inputs.build_android_debug
+    needs:
+      - changes
+      - analyze-and-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: apps/app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter 3.24.5
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: stable
+          cache: true
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Build Android debug APK
+        run: flutter build apk --debug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: bianjie-debug-apk
+          path: apps/app/build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
+
+  flutter-ci-result:
+    name: Flutter CI result
+    if: always()
+    needs:
+      - changes
+      - analyze-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require relevant Flutter checks
+        shell: bash
+        env:
+          RELEVANT: ${{ needs.changes.outputs.flutter }}
+          TEST_RESULT: ${{ needs.analyze-and-test.result }}
+        run: |
+          if [[ "$RELEVANT" != "true" ]]; then
+            echo "No Flutter changes; Flutter checks are not required for this PR."
+            exit 0
+          fi
+          if [[ "$TEST_RESULT" != "success" ]]; then
+            echo "Flutter format/analyze/test job result: $TEST_RESULT"
+            exit 1
+          fi
+          echo "Flutter checks passed."

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 非工具问题 / Non-tool Question
+    url: https://github.com/miaoda-bianjieapp/bianjie/discussions
+    about: Use Discussions for questions that are not actionable tool-development requests.
