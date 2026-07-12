@@ -13,7 +13,7 @@ mapfile -t tracked_files < <(git ls-files)
 echo "Checking tracked generated and local-only files..."
 for file in "${tracked_files[@]}"; do
   case "/$file/" in
-    */.dart_tool/*|*/build/*|*/target/*|*/data/*|*/.idea/*|*/.gradle/*)
+    */.dart_tool/*|*/build/*|*/target/*|/apps/api-java/data/*|*/.idea/*|*/.gradle/*)
       error "Generated or local directory is tracked: $file"
       ;;
   esac
