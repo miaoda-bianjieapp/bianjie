@@ -3,7 +3,6 @@
 本文面向参与“功能”和“写作”工具开发的同事，说明从获取项目到发起 Pull Request（PR）的完整流程。架构约束以根目录 `AGENTS.md` 为准；本文负责说明实际操作方法和可直接交给 AI 的提示词。
 
 仓库管理员的 Issue 审批、任务登记、PR Review、CI、Flyway、真机抽测和合并流程见 `docs/administrator-workflow.zh-CN.md`。
-
 ## 一、先理解四个协作对象
 
 | 对象 | 用途 | 谁负责 |
