@@ -38,7 +38,7 @@ class InputComposer extends StatelessWidget {
                 border: InputBorder.none,
               ),
             ),
-            const Divider(color: AppColors.border),
+            Divider(color: AppColors.border),
             Row(
               children: [
                 Expanded(
@@ -84,11 +84,11 @@ class ComposerActionChip extends StatelessWidget {
       avatar: Icon(icon, size: 16, color: AppColors.textSecondary),
       label: Text(label),
       onPressed: onTap,
-      side: const BorderSide(color: AppColors.border),
+      side: BorderSide(color: AppColors.border),
       backgroundColor: AppColors.surface,
-      labelStyle: const TextStyle(
+      labelStyle: TextStyle(
         color: AppColors.textSecondary,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
       ),
     );
   }

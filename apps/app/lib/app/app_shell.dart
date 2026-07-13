@@ -21,9 +21,9 @@ class AppShell extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: _onDestinationSelected,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        indicatorColor: AppColors.primaryBlue.withOpacity(0.1),
+        backgroundColor: AppColors.card,
+        surfaceTintColor: Colors.transparent,
+        indicatorColor: AppColors.navigationIndicator,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: const [
           NavigationDestination(

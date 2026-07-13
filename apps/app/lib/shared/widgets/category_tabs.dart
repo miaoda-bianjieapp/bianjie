@@ -37,8 +37,8 @@ class CategoryTabs extends StatelessWidget {
             selectedColor: AppColors.primaryBlue,
             backgroundColor: AppColors.card,
             labelStyle: TextStyle(
-              color: isSelected ? Colors.white : AppColors.textSecondary,
-              fontWeight: FontWeight.w700,
+              color: isSelected ? AppColors.onPrimary : AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
             ),
             side: BorderSide(
               color: isSelected ? AppColors.primaryBlue : AppColors.border,

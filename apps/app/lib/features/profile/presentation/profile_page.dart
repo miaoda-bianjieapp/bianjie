@@ -37,8 +37,8 @@ class ProfilePage extends ConsumerWidget {
                     backgroundColor: AppColors.primaryBlue,
                     child: Text(
                       user.avatar,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.onPrimary,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -73,7 +73,7 @@ class ProfilePage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           Material(
-            color: AppColors.textPrimary,
+            color: AppColors.featuredSurface,
             borderRadius: BorderRadius.circular(AppRadius.xl),
             child: InkWell(
               borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -82,7 +82,7 @@ class ProfilePage extends ConsumerWidget {
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.workspace_premium,
                       color: AppColors.warning,
                       size: 34,
@@ -94,10 +94,13 @@ class ProfilePage extends ConsumerWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium
-                            ?.copyWith(color: Colors.white),
+                            ?.copyWith(color: AppColors.textPrimary),
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: Colors.white70),
+                    Icon(
+                      Icons.chevron_right,
+                      color: AppColors.textSecondary,
+                    ),
                   ],
                 ),
               ),
@@ -195,7 +198,7 @@ class _QuickEntry extends StatelessWidget {
                     label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ],
               ),

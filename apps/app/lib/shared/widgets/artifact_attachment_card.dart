@@ -64,7 +64,7 @@ class ArtifactAttachmentCard extends StatelessWidget {
                             name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ),
                         IconButton(
@@ -111,7 +111,7 @@ class ArtifactAttachmentCard extends StatelessWidget {
                 name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -284,7 +284,7 @@ String? _normalizedBase64(String? base64Data, String? url) {
 }
 
 Widget _imageFallback() {
-  return const ColoredBox(
+  return ColoredBox(
     color: AppColors.surfaceSoft,
     child: Center(child: Icon(Icons.broken_image_outlined)),
   );

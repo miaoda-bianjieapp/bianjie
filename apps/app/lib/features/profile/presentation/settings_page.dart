@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_theme_provider.dart';
 import '../../../core/utils/snackbar.dart';
 import '../../../shared/providers/permission_providers.dart';
 import '../../../shared/services/app_permission_service.dart';
@@ -19,8 +20,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final visualTheme = ref.watch(appVisualThemeProvider);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(28, 28, 28, 32),
@@ -39,7 +42,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               trailing: CircleAvatar(
                 radius: 30,
                 backgroundColor: AppColors.primaryBlue.withOpacity(0.12),
-                child: const Text(
+                child: Text(
                   'BJ',
                   style: TextStyle(
                     color: AppColors.primaryBlue,
@@ -48,6 +51,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
               ),
               onTap: () => showAppSnackBar(context, '对话头像设置占位'),
+            ),
+            _SettingsRow(
+              icon: visualTheme == AppVisualTheme.night
+                  ? Icons.dark_mode_outlined
+                  : Icons.light_mode_outlined,
+              title: '外观模式',
+              subtitle: visualTheme == AppVisualTheme.night ? '夜航模式' : '黑白日间模式',
+              trailing: Switch(
+                value: visualTheme == AppVisualTheme.night,
+                onChanged: (isNight) {
+                  ref.read(appVisualThemeProvider.notifier).state =
+                      isNight ? AppVisualTheme.night : AppVisualTheme.signal;
+                },
+              ),
             ),
             _SettingsRow(
               icon: Icons.admin_panel_settings_outlined,
@@ -212,14 +229,14 @@ class _SettingsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final trailingWidget = trailing ??
         (value == null
-            ? const Icon(
+            ? Icon(
                 Icons.chevron_right,
-                color: Color(0xFFC5C8D0),
+                color: AppColors.textTertiary,
                 size: 30,
               )
             : Text(
                 value!,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -240,7 +257,7 @@ class _SettingsRow extends StatelessWidget {
               width: 44,
               child: Icon(
                 icon,
-                color: const Color(0xFF8B8B9B),
+                color: AppColors.textSecondary,
                 size: 30,
               ),
             ),
@@ -251,8 +268,8 @@ class _SettingsRow extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Color(0xFF151820),
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
                       fontSize: 23,
                       height: 1.15,
                       fontWeight: FontWeight.w400,
@@ -262,8 +279,8 @@ class _SettingsRow extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       subtitle!,
-                      style: const TextStyle(
-                        color: Color(0xFF8B8B9B),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
                         fontSize: 15,
                         height: 1.25,
                       ),

@@ -32,7 +32,7 @@ class ModelBadge extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
+              Icon(
                 Icons.auto_awesome,
                 color: AppColors.primaryBlue,
                 size: 16,
@@ -42,15 +42,15 @@ class ModelBadge extends StatelessWidget {
                 child: Text(
                   label,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.primaryBlue,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
-              const Icon(
+              Icon(
                 Icons.keyboard_arrow_down,
                 color: AppColors.primaryBlue,
                 size: 16,

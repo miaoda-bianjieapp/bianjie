@@ -509,7 +509,7 @@ class _ToolAttachmentPanel extends StatelessWidget {
                   '最多${maxFiles.toInt()}个',
                   if (maxSize != null) '单个不超过${maxSize.toInt()}MB',
                 ].join(' · '),
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 12,
                 ),
@@ -570,7 +570,7 @@ class _SelectedToolAttachment extends StatelessWidget {
                 '${attachment.name} · ${(attachment.size / 1024).ceil()}KB',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
             IconButton(
@@ -651,7 +651,7 @@ class _PrimaryInputPanel extends StatelessWidget {
           children: [
             Text(
               config.required ? '${config.label} *' : config.label,
-              style: const TextStyle(fontWeight: FontWeight.w800),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: AppSpacing.sm),
             TextField(
@@ -854,7 +854,7 @@ class _ToolConfigPanel extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.tune, color: AppColors.primaryBlue),
+                Icon(Icons.tune, color: AppColors.primaryBlue),
                 const SizedBox(width: AppSpacing.sm),
                 Text('运行参数', style: Theme.of(context).textTheme.titleMedium),
               ],
@@ -895,7 +895,7 @@ class _ConfigChips extends StatelessWidget {
       ..._chips('输出', tool.config['outputFormats']),
     ];
     if (chips.isEmpty) {
-      return const Text(
+      return Text(
         '当前工具使用默认输入参数。',
         style: TextStyle(color: AppColors.textSecondary),
       );
@@ -955,7 +955,7 @@ class _ToolFieldInput extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_label, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(_label, style: const TextStyle(fontWeight: FontWeight.w500)),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: AppSpacing.sm,
@@ -978,7 +978,7 @@ class _ToolFieldInput extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_label, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(_label, style: const TextStyle(fontWeight: FontWeight.w500)),
             const SizedBox(height: AppSpacing.sm),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -1017,14 +1017,14 @@ class _ToolFieldInput extends StatelessWidget {
                 Expanded(
                   child: Text(
                     _label,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
                 Text(
                   _formatNumber(current),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.primaryBlue,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -1204,7 +1204,7 @@ class _ResultBox extends StatelessWidget {
               if (parameterText != null) ...[
                 const Text(
                   '提交参数',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(parameterText),
@@ -1215,7 +1215,7 @@ class _ResultBox extends StatelessWidget {
                   const Expanded(
                     child: Text(
                       '执行输出',
-                      style: TextStyle(fontWeight: FontWeight.w800),
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                   CopyIconButton(text: copyText),
@@ -1225,7 +1225,7 @@ class _ResultBox extends StatelessWidget {
               if (result != null && result.isNotEmpty)
                 SelectableText(
                   result,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.textPrimary,
                     height: 1.45,
                   ),
@@ -1236,7 +1236,7 @@ class _ResultBox extends StatelessWidget {
                 const SizedBox(height: AppSpacing.md),
                 const Text(
                   '输出附件',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 _OutputArtifacts(artifacts: artifacts),
@@ -1331,7 +1331,7 @@ class _OutputArtifacts extends StatelessWidget {
                 name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -1369,7 +1369,7 @@ class _MetaRow extends StatelessWidget {
             width: 72,
             child: Text(
               label,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ),
           Expanded(child: Text(value)),
@@ -1401,7 +1401,7 @@ class _StatusRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: Row(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 72,
             child: Text(
               '状态',
@@ -1414,7 +1414,7 @@ class _StatusRow extends StatelessWidget {
             side: BorderSide.none,
             labelStyle: TextStyle(
               color: color,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

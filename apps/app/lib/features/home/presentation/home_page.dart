@@ -240,14 +240,14 @@ class _SelectedAttachment extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.image_outlined, color: AppColors.primaryBlue),
+            Icon(Icons.image_outlined, color: AppColors.primaryBlue),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
                 '${attachment.name} · ${(attachment.size / 1024).ceil()}KB',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
             IconButton(
@@ -285,7 +285,7 @@ class _ChatHeader extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               Text(
                 needsCompression ? '上下文已达到整理阈值' : '当前对话会保留完整消息历史',
-                style: const TextStyle(color: AppColors.textSecondary),
+                style: TextStyle(color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -346,7 +346,7 @@ class _MessageBubble extends StatelessWidget {
                 Text(
                   message.content,
                   style: TextStyle(
-                    color: isUser ? Colors.white : AppColors.textPrimary,
+                    color: isUser ? AppColors.onPrimary : AppColors.textPrimary,
                     height: 1.35,
                   ),
                 ),
@@ -369,16 +369,19 @@ class _MessageBubble extends StatelessWidget {
                       child: Text(
                         isUser ? message.modelName : 'AI 回复',
                         style: TextStyle(
-                          color:
-                              isUser ? Colors.white70 : AppColors.textSecondary,
+                          color: isUser
+                              ? AppColors.onPrimary.withOpacity(0.68)
+                              : AppColors.textSecondary,
                           fontSize: 12,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     CopyIconButton(
                       text: message.content,
-                      color: isUser ? Colors.white70 : AppColors.textSecondary,
+                      color: isUser
+                          ? AppColors.onPrimary.withOpacity(0.68)
+                          : AppColors.textSecondary,
                     ),
                   ],
                 ),
@@ -413,7 +416,9 @@ class _AttachmentPreview extends StatelessWidget {
       );
     }
 
-    final foreground = compact ? Colors.white70 : AppColors.textSecondary;
+    final foreground = compact
+        ? AppColors.onPrimary.withOpacity(0.68)
+        : AppColors.textSecondary;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -522,7 +527,7 @@ class _ChannelTab extends StatelessWidget {
                   color:
                       selected ? AppColors.textPrimary : AppColors.textTertiary,
                   fontSize: 17,
-                  fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                 ),
               ),
               const SizedBox(height: 5),
@@ -531,7 +536,7 @@ class _ChannelTab extends StatelessWidget {
                 width: selected ? 26 : 0,
                 height: 3,
                 decoration: BoxDecoration(
-                  color: AppColors.textPrimary,
+                  color: AppColors.primaryBlue,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -557,7 +562,7 @@ class _AssistantPlaceholder extends StatelessWidget {
               color: AppColors.primaryBlue.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: const SizedBox(
+            child: SizedBox(
               width: 72,
               height: 72,
               child: Icon(
@@ -570,7 +575,7 @@ class _AssistantPlaceholder extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
           Text('智能助理', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppSpacing.xs),
-          const Text(
+          Text(
             '敬请期待',
             style: TextStyle(color: AppColors.textTertiary),
           ),
@@ -618,7 +623,7 @@ class _PromoBanner extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.textTertiary),
+              Icon(Icons.chevron_right, color: AppColors.textTertiary),
             ],
           ),
         ),

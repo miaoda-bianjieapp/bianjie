@@ -130,7 +130,7 @@ class _BrandHeader extends StatelessWidget {
             color: AppColors.primaryBlue.withOpacity(0.12),
             borderRadius: BorderRadius.circular(AppRadius.md),
           ),
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.all(AppSpacing.sm),
             child: Icon(Icons.change_history, color: AppColors.primaryBlue),
           ),
@@ -247,10 +247,10 @@ class _CountBadge extends StatelessWidget {
         child: Text(
           '$count个工具',
           textScaler: TextScaler.noScaling,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.textSecondary,
             fontSize: 12,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -268,7 +268,7 @@ class _NewBadge extends StatelessWidget {
         color: AppColors.danger,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Text(
           'NEW',
@@ -294,7 +294,7 @@ class _EmptySearchResult extends StatelessWidget {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Center(
           child: Text(

@@ -159,7 +159,7 @@ class _StatTile extends StatelessWidget {
           children: [
             Text(
               '$value$unit',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.primaryBlue,
                 fontWeight: FontWeight.w900,
               ),
@@ -170,7 +170,7 @@ class _StatTile extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 11,
               ),
