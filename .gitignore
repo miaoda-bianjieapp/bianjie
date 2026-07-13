@@ -19,6 +19,7 @@
 **/build/
 **/target/
 /apps/api-java/data/
+/ui/
 *.apk
 *.aab
 *.class
