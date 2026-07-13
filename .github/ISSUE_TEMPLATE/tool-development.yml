@@ -1,5 +1,5 @@
 name: 工具开发申请 / Tool Development Request
-description: 申请开发 1-3 个同能力族工具，由管理员确认后再创建个人分支。
+description: 申请开发同一 Tab、同一分类、同一能力族的 1-3 个工具，由管理员确认后再创建个人分支。
 title: '[Tool] '
 labels:
   - tool-request
@@ -7,9 +7,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        提交前请阅读 `AGENTS.md` 和 `docs/developer-tool-workflow.zh-CN.md`。一次申请最多包含 3 个同能力族工具。
+        提交前请阅读 `AGENTS.md` 和 `docs/developer-tool-workflow.zh-CN.md`。一次申请最多包含同一 Tab、同一分类、同一能力族的 3 个工具。多张截图必须逐一说明各自对应哪个工具和要实现的真实功能。
 
-        **开发者不需要预先懂 executor、operation、公共文件或 Flyway。** 请先把对标截图、目标行为和验收标准交给 AI，让 AI 只分析代码和架构、不编码，并生成本 Issue 草稿。无法确定的字段填写“待 AI/管理员确认”，由管理员批准后才能开始编码。
+        **开发者不需要预先懂 executor、operation、公共文件或 Flyway。** 请先把对标截图、目标行为和验收标准交给 AI，让 AI 读取 `docs/shared-tool-table-fields.zh-CN.md`，只分析代码和架构、不编码，并生成本 Issue 草稿。AI 生成候选 toolId 后，开发者必须自行查询 PostgreSQL 完成查重，再提交 Issue。无法确定的字段填写“待 AI/管理员确认”，由管理员批准后才能开始编码。
 
         Read `AGENTS.md` before submitting. One request may contain at most three tools from the same capability family. Coding starts only after administrator approval.
 
@@ -45,10 +45,23 @@ body:
     id: tools
     attributes:
       label: 工具清单 / Tool List
-      description: 每行一个工具，最多 3 个；写明中文名、建议 toolId 和真实可用目标。
+      description: 每行一个工具，最多 3 个；写明截图编号、中文名、现有/建议 toolId 和真实可用目标。
       placeholder: |
-        1. PDF 合并 | pdf-merge | 真实合并并输出 PDF
-        2. PDF 分割 | pdf-split | 真实分割并输出多个 PDF
+        1. 截图 1 | PDF 合并 | pdf-merge | 真实合并并输出 PDF
+        2. 截图 2 | PDF 分割 | pdf-split | 真实分割并输出多个 PDF
+    validations:
+      required: true
+
+  - type: textarea
+    id: tool_id_check
+    attributes:
+      label: toolId 开发者查重结果 / Developer Tool ID Check
+      description: AI 只生成候选 ID，不执行查重。开发者提交 Issue 前必须自行查询 PostgreSQL tools.id，逐个说明是数据库未发现、复用现有工具 ID，还是发生冲突后已重新命名。管理员另行检查共享表占用。
+      placeholder: |
+        1. PDF 合并：候选 pdf-merge
+           - PostgreSQL tools.id：未发现重复 / 已存在且为同一占位工具，决定复用
+        2. PDF 分割：候选 pdf-split
+           - PostgreSQL tools.id：原候选冲突；已改为 pdf-file-split 并复查无重复
     validations:
       required: true
 
@@ -114,6 +127,53 @@ body:
     attributes:
       label: 数据库变更说明 / Database Change Details
       placeholder: 新增 tool_artifacts 表；开发阶段迁移待管理员确认最终时间戳。
+
+  - type: textarea
+    id: shared_task_record
+    attributes:
+      label: 共享任务表记录草稿 / Shared Task Record Draft
+      description: 一个合规 Issue 默认对应且只对应 1 条任务记录（一个负责人、一个分支、一个 PR）。多个工具在同一单元格分行列出；若需要多条任务记录，应拆分 Issue。
+      placeholder: |
+        记录数量：1
+        Task ID：待管理员分配
+        Owner：@username / 姓名
+        Tab / 分类：功能 / PDF 操作
+        Tools：PDF 合并；PDF 分割
+        toolIds：pdf-merge；pdf-split
+        executor / operations：document-processing / pdf-merge；pdf-split
+        Branch：待管理员批准
+        Shared Ownership：DocumentProcessingToolExecutor；artifact/history
+        Database / Flyway：是否迁移及目的
+        PR：-
+        Status：需求确认
+        Updated：提交日期
+    validations:
+      required: true
+
+  - type: textarea
+    id: shared_migration_records
+    attributes:
+      label: 共享迁移占用表记录草稿 / Shared Migration Records Draft
+      description: 迁移记录数量等于本 Issue 计划新增的 Flyway SQL 文件数量，不等于工具数量。无迁移填 0 条和原因；一个迁移文件填 1 条；多个迁移文件逐条填写并说明依赖顺序。最终时间戳由管理员在合并顺序明确后批准。
+      placeholder: |
+        记录数量：0 / 1 / N
+
+        无迁移示例：
+        记录数量：0
+        原因：复用现有 tools、tool_runs 和 artifact 结构，仅通过管理 API 更新配置。
+
+        有迁移示例：
+        记录数量：1
+        Task ID：待管理员分配
+        Owner：@username / 姓名
+        Purpose：更新 pdf-merge 和 pdf-split 的工具配置
+        Draft File：docs/migration-drafts/<TASK>__configure_pdf_tools.sql
+        Final Migration：待管理员批准
+        Depends On：当前最新迁移 / 待管理员确认
+        Applied to Shared DB：否
+        Status：Draft
+    validations:
+      required: true
 
   - type: textarea
     id: acceptance
