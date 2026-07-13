@@ -190,9 +190,9 @@ class _HistorySectionTitle extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: Text(
               '$count条',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -244,7 +244,7 @@ class _ChatHistoryTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      leading: const Icon(Icons.chat_outlined, color: AppColors.primaryBlue),
+      leading: Icon(Icons.chat_outlined, color: AppColors.primaryBlue),
       title: Text(session.title),
       subtitle: Text('${session.modelName} · ${session.messageCount} 条消息'),
       trailing: const Icon(Icons.chevron_right),
@@ -269,7 +269,7 @@ class _ToolRunHistoryTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      leading: const Icon(Icons.auto_awesome, color: AppColors.primaryBlue),
+      leading: Icon(Icons.auto_awesome, color: AppColors.primaryBlue),
       title: Text(run.toolId),
       subtitle: Text('${run.status} · ${_short(run.input)}'),
       trailing: const Icon(Icons.chevron_right),
@@ -354,9 +354,9 @@ class _HistoryMessage extends StatelessWidget {
                 Expanded(
                   child: Text(
                     isUser ? '我' : 'AI',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -513,7 +513,7 @@ class _EmptyHistory extends StatelessWidget {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Center(
           child: Text(
@@ -584,7 +584,7 @@ class MembershipPage extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.textPrimary,
+            color: AppColors.featuredSurface,
             borderRadius: BorderRadius.circular(AppRadius.xl),
           ),
           child: Padding(
@@ -604,12 +604,12 @@ class MembershipPage extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge
-                      ?.copyWith(color: Colors.white),
+                      ?.copyWith(color: AppColors.textPrimary),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                const Text(
+                Text(
                   '当前为 Demo 占位页，后续接入会员权益、积分额度和订单系统。',
-                  style: TextStyle(color: Colors.white70),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: AppSpacing.xl),
                 FilledButton(

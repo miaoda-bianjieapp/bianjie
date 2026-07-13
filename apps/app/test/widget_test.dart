@@ -1,5 +1,8 @@
 import 'package:bianjie_ai_app/app/app.dart';
+import 'package:bianjie_ai_app/core/theme/app_colors.dart';
+import 'package:bianjie_ai_app/core/theme/app_theme_provider.dart';
 import 'package:bianjie_ai_app/features/home/presentation/home_page.dart';
+import 'package:bianjie_ai_app/features/profile/presentation/settings_page.dart';
 import 'package:bianjie_ai_app/features/tool_runner/presentation/tool_runner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,12 +13,100 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: BianjieAiApp()));
     await tester.pumpAndSettle();
 
+    expect(
+      Theme.of(tester.element(find.byType(HomePage))).brightness,
+      Brightness.dark,
+    );
+
     expect(find.text('首页'), findsWidgets);
     expect(find.text('功能'), findsOneWidget);
     expect(find.text('股票'), findsOneWidget);
     expect(find.text('智能体'), findsOneWidget);
     expect(find.text('写作'), findsOneWidget);
     expect(find.text('我的'), findsOneWidget);
+  });
+
+  testWidgets('switches between night and signal themes',
+      (WidgetTester tester) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const BianjieAiApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    container.read(appVisualThemeProvider.notifier).state =
+        AppVisualTheme.signal;
+    await tester.pumpAndSettle();
+
+    expect(
+      Theme.of(tester.element(find.byType(HomePage))).brightness,
+      Brightness.light,
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomePage))).colorScheme.primary,
+      const Color(0xFF1597A6),
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomePage))).colorScheme.onPrimary,
+      Colors.white,
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomePage))).scaffoldBackgroundColor,
+      const Color(0xFFFAFBFA),
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomePage)))
+          .textTheme
+          .titleLarge
+          ?.fontWeight,
+      FontWeight.w600,
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomePage)))
+          .chipTheme
+          .labelStyle
+          ?.fontWeight,
+      FontWeight.w500,
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomePage)))
+          .navigationBarTheme
+          .indicatorColor,
+      Colors.transparent,
+    );
+    expect(find.byType(NavigationDestination), findsNWidgets(6));
+
+    container.read(appVisualThemeProvider.notifier).state =
+        AppVisualTheme.night;
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.byType(HomePage))).brightness,
+      Brightness.dark,
+    );
+  });
+
+  testWidgets('settings switch selects signal theme',
+      (WidgetTester tester) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: SettingsPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(container.read(appVisualThemeProvider), AppVisualTheme.night);
+    await tester.tap(find.byType(Switch).first);
+    await tester.pumpAndSettle();
+    expect(container.read(appVisualThemeProvider), AppVisualTheme.signal);
   });
 
   testWidgets('renders dynamic tool parameters', (WidgetTester tester) async {

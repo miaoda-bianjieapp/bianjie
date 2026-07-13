@@ -33,9 +33,9 @@ class AppSearchBar extends StatelessWidget {
           borderSide: BorderSide.none,
           borderRadius: BorderRadius.circular(28),
         ),
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           color: AppColors.textTertiary,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w400,
         ),
       ),
     );

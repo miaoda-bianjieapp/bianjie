@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="边界 AI 移动端 UI 视觉方向对比稿"
+    />
+    <title>边界 AI · UI 方向提案</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="proposal">
+      <header class="proposal-header">
+        <div class="brand-lockup" aria-label="边界 AI UI 探索">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+          </span>
+          <span>边界 AI</span>
+          <span class="brand-divider"></span>
+          <span class="brand-caption">UI 探索</span>
+        </div>
+
+        <div class="intro-row">
+          <div>
+            <p class="eyebrow">视觉方向提案 · 2026</p>
+            <h1>同一产品，三种气质</h1>
+            <p class="intro-copy">
+              保留现有功能结构，只重做色彩、层级、密度与交互反馈。
+            </p>
+          </div>
+          <div class="screen-switcher" role="group" aria-label="预览页面">
+            <button class="screen-button is-active" data-screen="home" type="button">
+              首页
+            </button>
+            <button class="screen-button" data-screen="tools" type="button">
+              功能
+            </button>
+            <button class="screen-button" data-screen="writing" type="button">
+              写作
+            </button>
+            <button class="screen-button" data-screen="profile" type="button">
+              我的
+            </button>
+          </div>
+        </div>
+
+        <div class="selection-note" aria-live="polite">
+          <span class="selection-dot"></span>
+          <span id="selection-text">尚未选择方向，可先切换页面横向比较</span>
+        </div>
+      </header>
+
+      <section class="concept-grid" id="concept-grid" aria-label="三套 UI 方案"></section>
+
+      <footer class="proposal-footer">
+        <p>交互说明：顶部切换会同步三个方案；手机内底栏也可切换对应页面。</p>
+        <p>概念稿不包含后端逻辑、会员能力或新业务功能。</p>
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

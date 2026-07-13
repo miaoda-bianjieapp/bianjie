@@ -7,7 +7,7 @@ import '../../../core/utils/snackbar.dart';
 class OfficeTab extends StatelessWidget {
   const OfficeTab({super.key});
 
-  static const _tools = [
+  static final _tools = [
     _OfficeTool(
         '写一篇文章', '快速生成完整文章', Icons.article_outlined, AppColors.accentOrange),
     _OfficeTool('按风格写文章', '自定义表达风格', Icons.auto_stories_outlined,
@@ -125,10 +125,10 @@ class _OfficeFeature extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xs),
@@ -199,10 +199,10 @@ class _OfficeToolTile extends StatelessWidget {
                       tool.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 15,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xs),
@@ -210,7 +210,7 @@ class _OfficeToolTile extends StatelessWidget {
                       tool.subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textTertiary,
                         fontSize: 12,
                       ),
