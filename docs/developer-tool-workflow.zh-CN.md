@@ -149,12 +149,15 @@ Issues -> New issue -> 工具开发申请 / Tool Development Request
 
 ## 六、管理员批准后创建个人分支
 
-管理员在 Issue 中给出分支名后执行：
+> **分支生命周期硬性规则：一个任务一个新分支，一个分支只对应一个 Issue 和一个 PR。已经合并的分支禁止复用。**
+
+本项目所说的“个人分支”是由某位开发者负责的**一次性任务分支**，不是该开发者长期反复使用的固定分支。只有新 Issue 已经获得管理员批准，并且管理员给出本次任务的分支名后，才执行：
 
 ```powershell
+git fetch origin --prune
 git switch main
 git pull --ff-only origin main
-git switch -c dev/<姓名>/<简短主题>
+git switch -c dev/<姓名>/<简短主题> origin/main
 git status
 ```
 
@@ -164,7 +167,19 @@ git status
 git switch -c dev/zhangsan/pdf-tools
 ```
 
-一个任务使用一个个人分支。禁止在 `main` 上开发或提交。
+从 `origin/main` 创建可确保任务基于远程仓库最新代码，不会因为本地 `main` 较旧而带入已经过期的提交。第一次推送该分支时执行：
+
+```powershell
+git push -u origin dev/<姓名>/<简短主题>
+```
+
+必须遵守：
+
+- 禁止在 `main` 上开发或提交。
+- 禁止把上一个已经合并的分支改名后继续使用。
+- 禁止用同一个分支连续开发多个 Issue，或用同一个分支创建多个无关 PR。
+- 新任务必须使用新的简短主题和新的分支名，例如完成 `pdf-tools` 后，下一个任务使用 `dev/zhangsan/image-cover`。
+- 在当前 PR 尚未合并、管理员要求修改时，应继续提交并推送到当前分支，不要另建分支或重复创建 PR。
 
 ## 七、让 AI 按批准后的 Issue 开发
 
@@ -286,15 +301,35 @@ PR 创建后 GitHub 自动运行：
 
 ## 十二、合并后的动作
 
-管理员在审批和 CI 全部通过后执行 Squash Merge。GitHub 可自动删除远程个人分支。开发者开始下一个任务前执行：
+管理员在审批和 CI 全部通过后执行 Squash Merge。GitHub 可自动删除远程任务分支，但这不会自动删除开发者电脑上的本地分支。
+
+开发者看到 GitHub PR 状态为 `Merged` 后，应先确认本地没有需要保留的未提交修改，再同步最新主分支并删除本次任务的本地旧分支：
 
 ```powershell
+git status
+git fetch origin --prune
 git switch main
 git pull --ff-only origin main
 git branch -D dev/<姓名>/<已合并主题>
 ```
 
-执行 `-D` 前必须先在 GitHub 确认 PR 状态为 `Merged`，并确认最新 `main` 已包含该 PR。项目采用 Squash Merge，原个人分支提交不会原样成为 `main` 的祖先，因此安全删除参数 `-d` 可能拒绝删除；这里的 `-D` 只用于删除已经确认合并的本地旧分支，不会删除 `main` 中的代码、远程仓库内容或 GitHub PR 历史。未合并或无法确认的分支禁止强制删除。下一个任务重新从最新 `main` 创建新分支，不复用旧分支。
+执行 `-D` 前必须同时满足：
+
+1. GitHub 上该 PR 明确显示 `Merged`，不是 `Closed` 或仍在审查中。
+2. `git status` 没有本次任务尚未提交或尚未推送的代码。
+3. `git pull --ff-only origin main` 已成功，最新 `main` 中可以找到该 PR 的改动。
+
+项目采用 Squash Merge，个人分支上的原始提交不会原样成为 `main` 的祖先，因此较温和的 `git branch -d` 可能拒绝删除。这里的 `-D` 只用于删除满足以上条件的**本地已合并旧分支**，不会删除 `main` 中的代码、远程仓库内容或 GitHub PR 历史。未合并、仅关闭或无法确认的分支禁止使用 `-D`。
+
+完成清理后不要立即随意创建空分支。等下一个 Issue 获得管理员批准，再按第六节从最新 `origin/main` 创建全新的任务分支：
+
+```powershell
+git fetch origin --prune
+git switch -c dev/<姓名>/<新任务主题> origin/main
+git push -u origin dev/<姓名>/<新任务主题>
+```
+
+再次强调：**旧任务分支在合并后结束生命周期；下一项任务必须新建分支。复用已合并分支是 PR 重复提交、出现旧代码和频繁冲突的主要原因。**
 
 ## 十三、最短流程清单
 
@@ -303,7 +338,7 @@ git branch -D dev/<姓名>/<已合并主题>
 -> AI 读取截图、规范和代码，只生成架构预分析与 Issue 草稿
 -> 创建 Tool Development Request Issue
 -> 管理员批准并登记 Board
--> 从最新 main 创建个人分支
+-> 从最新 origin/main 创建一次性任务分支
 -> AI 按批准范围开发
 -> 自动测试 + 开发者 USB 真机测试
 -> 提交并推送个人分支
@@ -311,5 +346,6 @@ git branch -D dev/<姓名>/<已合并主题>
 -> CI + 管理员审查
 -> 修复仍推送同一分支
 -> 管理员 Squash Merge
--> 所有人同步最新 main
+-> 开发者同步最新 main 并删除本地旧任务分支
+-> 下一个 Issue 获批后再创建全新任务分支
 ```
