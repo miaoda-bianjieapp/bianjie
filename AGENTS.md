@@ -8,9 +8,9 @@
 
 This file is the workspace-wide AI collaboration guide for feature tools and writing tools. A more specific `AGENTS.md` in a subdirectory governs that subtree. In all cases, follow the actual repository code and the latest explicit requirement.
 
-多人协作时，开发者和 AI 在开始编码前还必须读取并更新根目录 `TOOL_DEVELOPMENT_BOARD.md`。未登记 `toolId`、负责人、个人分支、executor/operation 和公共文件占用的任务不得开始开发。
+多人协作时，开发者和 AI 在开始编码前还必须读取管理员维护的共享工具开发表。共享表格可以使用腾讯文档、企业微信在线表格、QQ/微信共享 Excel 或团队确认的其他实时协作表。AI 无法直接访问共享表时，开发者必须提供当前任务行的截图或文本。未登记 `toolId`、负责人、个人分支、executor/operation 和公共文件占用的任务不得开始开发。根目录 `TOOL_DEVELOPMENT_BOARD.md` 是共享表格的字段模板和离线备份参考，不再要求每次状态变化都通过 Git 提交。
 
-During multi-developer collaboration, developers and AI agents MUST also read and update the root `TOOL_DEVELOPMENT_BOARD.md` before coding. Work must not start until the tool ID, owner, personal branch, executor/operation, and shared-file ownership are registered.
+During multi-developer collaboration, developers and AI agents MUST read the administrator-maintained shared tool development table before coding. The table may be a Tencent document, WeCom online sheet, shared QQ/WeChat spreadsheet, or another team-approved real-time collaboration sheet. When an AI agent cannot access the table directly, the developer MUST provide the current task row as text or a screenshot. Work must not start until the tool ID, owner, personal branch, executor/operation, and shared-file ownership are registered. The root `TOOL_DEVELOPMENT_BOARD.md` remains the field template and offline reference; every status change does not need a Git commit.
 
 规范中的关键词含义如下：
 

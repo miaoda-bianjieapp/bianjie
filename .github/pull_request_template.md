@@ -57,7 +57,7 @@ Device scenarios / 真机场景：
 
 ## Administrator Checklist / 管理员检查
 
-- [ ] Task is registered in `TOOL_DEVELOPMENT_BOARD.md`.
+- [ ] Task is registered in the administrator's shared tool development table.
 - [ ] `toolId`, executor/operation, and shared-file ownership match the approved Issue.
 - [ ] Branch is synchronized with the latest `main` after earlier PRs were merged.
 - [ ] Required CI checks pass after the final synchronization.

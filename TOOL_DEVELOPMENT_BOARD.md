@@ -1,8 +1,8 @@
-# 工具开发任务看板 / Tool Development Board
+# 共享工具开发表字段模板 / Shared Tool Development Table Template
 
-本文件是仓库内的管理员任务台账，不需要另外创建 Excel 或共享在线表格。它用于登记多人并行开发中的工具、公共能力和数据库迁移，避免重复开发、`toolId` 冲突、执行器冲突和 Flyway 版本冲突。开发者先通过 GitHub 的“工具开发申请”Issue 模板提交信息，管理员确认后统一更新本看板；普通开发者不应多人同时直接编辑此文件。
+本文件是管理员共享工具开发表的字段模板和离线备份参考。团队日常以腾讯文档、企业微信在线表格、QQ/微信共享 Excel 或其他管理员指定的实时共享表为准，不要求每次状态变化都修改本文件并创建 Git PR。它定义任务表和 Flyway 迁移占用表的统一字段，避免重复开发、`toolId` 冲突、执行器冲突和迁移版本冲突。开发者先通过 GitHub 的“工具开发申请”Issue 模板提交信息，管理员确认后更新共享表；普通开发者不应直接修改共享表的结构或删除记录。
 
-This file is the repository-owned administrator ledger; no separate spreadsheet is required. Developers submit a GitHub Tool Development Request Issue first. After approval, the administrator updates this board. Multiple developers should not edit this file concurrently.
+This file is the field template and offline backup reference for the administrator-owned shared tool development table. The team may use a Tencent document, WeCom online sheet, shared QQ/WeChat spreadsheet, or another approved real-time sheet as the daily source of truth. Developers submit a GitHub Tool Development Request Issue first; after approval, the administrator updates the shared table. Developers must not change the table schema or delete records directly.
 
 > 开发前必须同时阅读根目录 `AGENTS.md`。每次 AI 任务最多开发 3 个工具。
 >
@@ -12,7 +12,7 @@ This file is the repository-owned administrator ledger; no separate spreadsheet 
 
 ```text
 GitHub Issue（开发者填写需求申请）
-    -> TOOL_DEVELOPMENT_BOARD.md（管理员登记和分配资源）
+    -> 共享工具开发表（管理员登记和分配资源）
     -> 个人分支开发
     -> Pull Request（开发者提交交付说明）
     -> GitHub Actions（自动检查）
@@ -20,11 +20,11 @@ GitHub Issue（开发者填写需求申请）
 ```
 
 - **开发者填写**：GitHub Issue 和 PR 模板。
-- **管理员维护**：本看板的任务行、状态、公共文件占用和 Flyway 登记。
+- **管理员维护**：共享表的任务行、状态、公共文件占用和 Flyway 登记；本文件只作为字段模板和必要时的 Git 备份。
 - **GitHub Actions 维护**：编译、测试、格式、静态分析、密钥、生成文件和 Flyway 规则检查。
 
 - **Developer-owned**: GitHub Issue and PR forms.
-- **Administrator-owned**: this board's assignments, statuses, shared ownership, and Flyway registry.
+- **Administrator-owned**: the shared table's assignments, statuses, shared ownership, and Flyway registry; this file is its field template and optional Git backup.
 - **GitHub Actions-owned**: build, test, format, analysis, secret, generated-file, and Flyway checks.
 
 ---
@@ -39,7 +39,7 @@ Add one row after the administrator assigns a task. One PR may contain one to th
 |---|---|---|---|---|---|---|---|---|---|---|
 | 示例-001 | 张三 | 功能 > PDF 操作：PDF 合并 | `pdf-merge` | `document-processing` / `pdf-merge` | `dev/zhangsan/pdf-merge` | `DocumentProcessingToolExecutor` | 新增 artifact 表；迁移待编号 | - | 需求确认 | 2026-07-12 |
 
-> 上面的示例行仅演示格式，正式使用看板时可以删除。
+> 上面的示例行仅演示格式，复制到正式共享表后可以删除。
 >
 > The sample row only demonstrates the format and may be removed when real tracking begins.
 
@@ -173,7 +173,7 @@ Tasks normally move from assignment through requirement confirmation, developmen
 4. 与开发者确认复用哪个 executor、使用什么 operation。
 5. 登记公共文件占用，避免两人同时重构同一个执行器。
 6. 如涉及数据库，在 Flyway 表先登记目的，最终版本暂时留空。
-7. 要求开发者从最新 `main` 创建个人分支，并把分支名写回看板。
+7. 要求开发者从最新 `main` 创建个人分支，并由管理员把分支名写入共享表。
 
 ### 4.2 PR 到达时 / When a PR Is Opened
 
@@ -208,16 +208,16 @@ git pull --ff-only
 git switch -c dev/<name>/<short-topic>
 ```
 
-然后更新看板中的负责人、分支和状态。把任务 ID、工具清单、截图和 `AGENTS.md` 一起交给 AI。
+然后把分支名告知管理员，由管理员更新共享表中的负责人、分支和状态。把任务 ID、工具清单、截图、共享表批准记录和 `AGENTS.md` 一起交给 AI。
 
-Update the board with owner, branch, and status. Give the AI the task ID, tool list, screenshots, and `AGENTS.md`.
+Tell the administrator the branch name; the administrator updates the shared table. Give the AI the task ID, tool list, screenshots, approved shared-table record, and `AGENTS.md`.
 
 ### 开发完成 / Complete Development
 
 1. 自己运行自动测试和 Android Studio 真机测试。
-2. 更新看板到“开发者自测”。
+2. 通知管理员自测开始，由管理员把共享表状态更新为“开发者自测”。
 3. 提交个人分支并创建 PR，完整填写 PR 说明。
-4. 把 PR 链接写入看板并更新为“PR 审查中”。
+4. 把 PR 链接发给管理员，由管理员写入共享表并更新为“PR 审查中”。
 5. 管理员要求同步 `main` 时，在个人分支执行：
 
 ```powershell
