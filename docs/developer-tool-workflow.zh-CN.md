@@ -52,31 +52,80 @@ git status
 
 开发者不需要一开始就知道 executor、operation、公共文件和 Flyway。正确流程是：让 AI 读取截图、`AGENTS.md` 和实际代码，只做分析并生成 Issue 草稿；管理员负责最终确认。
 
-将对标产品详情页截图放入 AI 对话，并使用下面的提示词：
+将对标产品详情页截图放入 AI 对话。开发者必须先说清楚每张截图对应哪个工具、准备实现什么真实功能，不能只发截图让 AI 猜。例如：
 
 ```text
-你正在协助开发边界 AI 项目的新工具。请先读取仓库根目录 AGENTS.md、
-管理员共享工具开发表（字段模板见 TOOL_DEVELOPMENT_BOARD.md），以及与工具目录、动态表单、ToolExecutor、
-ToolExecutorRegistry、历史记录和附件相关的现有代码。
+目标位置：功能 Tab > 图像生成分类
 
-我提供了对标产品截图。本阶段只做需求拆解和架构预分析，禁止修改文件、
-禁止编码、禁止创建提交。
+截图 1：AI 生图（旧版）
+计划功能：把现有占位工具改成真实文本生图，输入提示词并输出可保存、可历史回看的图片。
 
-请完成：
-1. 区分截图明确事实、合理推断和仍需确认的问题；
-2. 列出工具名称、目标 Tab、分类、输入字段、参数、附件限制、输出和状态；
-3. 判断复用哪个现有能力族 executor，还是确实需要新能力族，并说明依据；
-4. 为每个工具建议稳定 toolId 和 operation；
-5. 列出预计修改的前端、后端、协议、历史附件和公共文件；
-6. 判断是否需要数据库结构或配置数据迁移；
-7. 给出可测试的验收标准和风险；
-8. 按 GitHub “工具开发申请 / Tool Development Request”表单字段，输出一份
-   可以直接填写的中文 Issue 草稿。
+截图 2：AI 证件照
+计划功能：上传单人照片，选择证件照尺寸和背景色，输出可保存、可历史回看的证件照。
 
-不知道的内容必须写“待 AI/管理员确认”，不得编造。一次最多分析 3 个同能力族工具。
+以上工具属于同一 Tab、同一分类和同一 image-generation 能力族，希望放在一个 Issue 和一个 PR 中开发。
+```
+
+然后使用下面的提示词：
+
+```text
+你正在协助开发边界 AI 项目的工具。当前尚未创建 Issue，也尚未在共享表登记本任务。
+请先读取仓库根目录 AGENTS.md、轻量字段说明 docs/shared-tool-table-fields.zh-CN.md，
+以及工具目录、动态表单、ToolExecutor、
+ToolExecutorRegistry、tools/tool_runs、历史记录、artifact、Flutter repository/provider/page、
+mock、测试和 Flyway 迁移代码。
+
+我会提供一张或多张对标产品截图，并逐张说明对应工具和准备实现的具体功能。
+截图1：。。。
+截图2：。。。
+
+本次所有工具必须属于同一 Tab、同一分类、同一能力族，最多 3 个；不满足时请要求拆分 Issue。
+
+本阶段只做需求拆解、现状检查和架构预分析。禁止修改文件、禁止编码、
+禁止创建提交、禁止把占位能力描述成真实能力。
+
+先在内部完成截图映射、需求拆解、字段与附件设计、现有架构复用判断、候选 toolId、
+executor/operation、公共文件占用、数据库影响和验收标准分析。不要逐项输出这些中间分析过程，
+也不要输出冗长的“截图事实/合理推断/代码检查过程”报告。
+
+如果任一截图对应的工具名称、计划功能、主要输入、附件、关键参数或期望输出不明确，
+先提出少量、具体、能直接回答的问题并等待开发者回复。此时不要生成 Issue 草稿，
+不要自行补全关键业务需求。所有工具信息明确后再继续。
+
+信息明确后，只输出一份可以直接填写到 GitHub “工具开发申请 / Tool Development Request”
+所有字段的中文 Issue 草稿，不再额外输出前置分析报告。Issue 草稿必须包含：
+
+- 每张截图对应的工具、具体真实功能和候选 toolId；候选 ID 标记为待开发者自行查询数据库确认，
+  AI 不查询 PostgreSQL、不搜索共享表、不执行 toolId 查重。
+- 建议 executor/operation、输入与附件、数据库影响、公共文件占用、验收标准和仍待管理员确认项。
+- 按 docs/shared-tool-table-fields.zh-CN.md 生成 1 条“共享任务表记录草稿”。
+  如果需要不同负责人、分支、PR 或能力族，直接说明必须拆分 Issue。
+- 按预计新增的 Flyway SQL 文件数量生成 0 到多条“共享迁移占用表记录草稿”；
+  无迁移写 0 条和原因，最终迁移时间戳填写“待管理员批准”。
+- `toolId 开发者查重结果`字段填写“待开发者执行数据库查询后补充”。
+
+不知道的内容必须写“待 AI/管理员确认”，不得编造。不得输出 API Key、数据库密码、
+完整用户数据或 application-local.yml 内容。
 ```
 
 AI 的结论只是建议，不是批准。如果 AI 判断需要新执行器、新表、共享协议变化或专用 Flutter 页面，Issue 中必须醒目标注，等待管理员审查。
+
+### 开发者自行检查候选 toolId
+
+AI 生成 Issue 草稿后，开发者在提交 GitHub Issue 前，根据草稿中的候选 toolId 自行查询本机 PostgreSQL：
+
+```sql
+SELECT id, name, tab_key, category_id
+FROM tools
+WHERE id IN ('候选-id-1', '候选-id-2');
+```
+
+- 查询不到：在 Issue 中填写“数据库未发现重复”。
+- 查到且就是准备开发的现有占位工具：复用该 `tools.id`，不要创建新 ID。
+- 查到但属于另一个工具：候选 ID 冲突，重新命名并再次查询。
+- 开发者不得把数据库密码、连接 URL 或 `application-local.yml` 内容贴进 Issue。
+
+数据库查重完成后，再填写 Issue 的 `toolId 开发者查重结果`字段。管理员审查 Issue 时还会检查共享表中的并行任务占用。
 
 ## 五、创建工具申请 Issue
 
@@ -89,20 +138,26 @@ Issues -> New issue -> 工具开发申请 / Tool Development Request
 把 AI 生成的草稿填写进去，并上传已遮挡账号、手机号、Key 和隐私内容的截图。字段填写原则：
 
 - 能确定的 `toolId`、executor 和 operation 填 AI 建议值。
+- `toolId 开发者查重结果`必须填写开发者执行 PostgreSQL 查询后的结果；AI 不负责执行查重。
 - 无法确定的架构字段填“待 AI/管理员确认”，不要猜。
+- `共享任务表记录草稿`通常固定为 1 条；如果 AI 给出多条，应先判断是否必须拆分 Issue。
+- `共享迁移占用表记录草稿`按 Flyway SQL 文件数量填写 0 到多条，不按工具数量填写。
 - 验收标准必须描述可观察结果，例如附件能打开、保存、历史回看，而不是只写“功能完成”。
 - Issue 创建后不得立即编码，等待管理员回复批准结果。
 
-管理员会确认任务范围，并在共享工具开发表登记任务 ID、负责人、个人分支、executor/operation、公共文件和 Flyway 占用。管理员可能要求补充截图、拆分超过 3 个工具的范围或调整架构。字段模板见根目录 `TOOL_DEVELOPMENT_BOARD.md`。
+管理员会确认任务范围，并在共享工具开发表登记任务 ID、负责人、个人分支、executor/operation、公共文件和 Flyway 占用。管理员可能要求补充截图、拆分超过 3 个工具的范围或调整架构。Issue 草稿使用的轻量字段说明见 `docs/shared-tool-table-fields.zh-CN.md`。
 
 ## 六、管理员批准后创建个人分支
 
-管理员在 Issue 中给出分支名后执行：
+> **分支生命周期硬性规则：一个任务一个新分支，一个分支只对应一个 Issue 和一个 PR。已经合并的分支禁止复用。**
+
+本项目所说的“个人分支”是由某位开发者负责的**一次性任务分支**，不是该开发者长期反复使用的固定分支。只有新 Issue 已经获得管理员批准，并且管理员给出本次任务的分支名后，才执行：
 
 ```powershell
+git fetch origin --prune
 git switch main
 git pull --ff-only origin main
-git switch -c dev/<姓名>/<简短主题>
+git switch -c dev/<姓名>/<简短主题> origin/main
 git status
 ```
 
@@ -112,7 +167,19 @@ git status
 git switch -c dev/zhangsan/pdf-tools
 ```
 
-一个任务使用一个个人分支。禁止在 `main` 上开发或提交。
+从 `origin/main` 创建可确保任务基于远程仓库最新代码，不会因为本地 `main` 较旧而带入已经过期的提交。第一次推送该分支时执行：
+
+```powershell
+git push -u origin dev/<姓名>/<简短主题>
+```
+
+必须遵守：
+
+- 禁止在 `main` 上开发或提交。
+- 禁止把上一个已经合并的分支改名后继续使用。
+- 禁止用同一个分支连续开发多个 Issue，或用同一个分支创建多个无关 PR。
+- 新任务必须使用新的简短主题和新的分支名，例如完成 `pdf-tools` 后，下一个任务使用 `dev/zhangsan/image-cover`。
+- 在当前 PR 尚未合并、管理员要求修改时，应继续提交并推送到当前分支，不要另建分支或重复创建 PR。
 
 ## 七、让 AI 按批准后的 Issue 开发
 
@@ -234,15 +301,35 @@ PR 创建后 GitHub 自动运行：
 
 ## 十二、合并后的动作
 
-管理员在审批和 CI 全部通过后执行 Squash Merge。GitHub 可自动删除远程个人分支。开发者开始下一个任务前执行：
+管理员在审批和 CI 全部通过后执行 Squash Merge。GitHub 可自动删除远程任务分支，但这不会自动删除开发者电脑上的本地分支。
+
+开发者看到 GitHub PR 状态为 `Merged` 后，应先确认本地没有需要保留的未提交修改，再同步最新主分支并删除本次任务的本地旧分支：
 
 ```powershell
+git status
+git fetch origin --prune
 git switch main
 git pull --ff-only origin main
 git branch -D dev/<姓名>/<已合并主题>
 ```
 
-执行 `-D` 前必须先在 GitHub 确认 PR 状态为 `Merged`，并确认最新 `main` 已包含该 PR。项目采用 Squash Merge，原个人分支提交不会原样成为 `main` 的祖先，因此安全删除参数 `-d` 可能拒绝删除；这里的 `-D` 只用于删除已经确认合并的本地旧分支，不会删除 `main` 中的代码、远程仓库内容或 GitHub PR 历史。未合并或无法确认的分支禁止强制删除。下一个任务重新从最新 `main` 创建新分支，不复用旧分支。
+执行 `-D` 前必须同时满足：
+
+1. GitHub 上该 PR 明确显示 `Merged`，不是 `Closed` 或仍在审查中。
+2. `git status` 没有本次任务尚未提交或尚未推送的代码。
+3. `git pull --ff-only origin main` 已成功，最新 `main` 中可以找到该 PR 的改动。
+
+项目采用 Squash Merge，个人分支上的原始提交不会原样成为 `main` 的祖先，因此较温和的 `git branch -d` 可能拒绝删除。这里的 `-D` 只用于删除满足以上条件的**本地已合并旧分支**，不会删除 `main` 中的代码、远程仓库内容或 GitHub PR 历史。未合并、仅关闭或无法确认的分支禁止使用 `-D`。
+
+完成清理后不要立即随意创建空分支。等下一个 Issue 获得管理员批准，再按第六节从最新 `origin/main` 创建全新的任务分支：
+
+```powershell
+git fetch origin --prune
+git switch -c dev/<姓名>/<新任务主题> origin/main
+git push -u origin dev/<姓名>/<新任务主题>
+```
+
+再次强调：**旧任务分支在合并后结束生命周期；下一项任务必须新建分支。复用已合并分支是 PR 重复提交、出现旧代码和频繁冲突的主要原因。**
 
 ## 十三、最短流程清单
 
@@ -251,7 +338,7 @@ git branch -D dev/<姓名>/<已合并主题>
 -> AI 读取截图、规范和代码，只生成架构预分析与 Issue 草稿
 -> 创建 Tool Development Request Issue
 -> 管理员批准并登记 Board
--> 从最新 main 创建个人分支
+-> 从最新 origin/main 创建一次性任务分支
 -> AI 按批准范围开发
 -> 自动测试 + 开发者 USB 真机测试
 -> 提交并推送个人分支
@@ -259,5 +346,6 @@ git branch -D dev/<姓名>/<已合并主题>
 -> CI + 管理员审查
 -> 修复仍推送同一分支
 -> 管理员 Squash Merge
--> 所有人同步最新 main
+-> 开发者同步最新 main 并删除本地旧任务分支
+-> 下一个 Issue 获批后再创建全新任务分支
 ```
