@@ -9,7 +9,7 @@
 |---|---|---|
 | `AGENTS.md` | AI 和开发者必须遵守的架构、测试、安全和 Git 规范 | 所有人阅读，管理员维护 |
 | Tool Development Request Issue | 开发前的任务申请和架构预分析结果 | 开发者创建，管理员批准 |
-| `TOOL_DEVELOPMENT_BOARD.md` | 已批准任务、负责人、分支和公共文件占用登记 | 管理员维护 |
+| 共享工具开发表 | 已批准任务、负责人、分支和公共文件占用登记 | 管理员维护 |
 | Pull Request | 开发完成后的代码审查、CI 和合并申请 | 开发者创建，管理员审查合并 |
 
 Issue 是“准备开发什么”，PR 是“实际完成了什么”。两者不能互相替代。
@@ -56,7 +56,7 @@ git status
 
 ```text
 你正在协助开发边界 AI 项目的新工具。请先读取仓库根目录 AGENTS.md、
-TOOL_DEVELOPMENT_BOARD.md，以及与工具目录、动态表单、ToolExecutor、
+管理员共享工具开发表（字段模板见 TOOL_DEVELOPMENT_BOARD.md），以及与工具目录、动态表单、ToolExecutor、
 ToolExecutorRegistry、历史记录和附件相关的现有代码。
 
 我提供了对标产品截图。本阶段只做需求拆解和架构预分析，禁止修改文件、
@@ -93,7 +93,7 @@ Issues -> New issue -> 工具开发申请 / Tool Development Request
 - 验收标准必须描述可观察结果，例如附件能打开、保存、历史回看，而不是只写“功能完成”。
 - Issue 创建后不得立即编码，等待管理员回复批准结果。
 
-管理员会确认任务范围，并在 `TOOL_DEVELOPMENT_BOARD.md` 登记任务 ID、负责人、个人分支、executor/operation、公共文件和 Flyway 占用。管理员可能要求补充截图、拆分超过 3 个工具的范围或调整架构。
+管理员会确认任务范围，并在共享工具开发表登记任务 ID、负责人、个人分支、executor/operation、公共文件和 Flyway 占用。管理员可能要求补充截图、拆分超过 3 个工具的范围或调整架构。字段模板见根目录 `TOOL_DEVELOPMENT_BOARD.md`。
 
 ## 六、管理员批准后创建个人分支
 
@@ -125,7 +125,7 @@ git switch -c dev/zhangsan/pdf-tools
 1. 读取 AGENTS.md、该 Issue 的最终内容和管理员批准意见；
 2. 检查当前 Git 分支，确认不是 main；
 3. 检查 git status，保护已有修改；
-4. 对照 TOOL_DEVELOPMENT_BOARD.md，确认 toolId、负责人、分支、
+4. 对照管理员共享工具开发表，确认 toolId、负责人、分支、
    executor/operation 和公共文件占用一致；
 5. 先向我汇报本次最多 3 个工具的清单、复用能力族和预计共享修改。
 

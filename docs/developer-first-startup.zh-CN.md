@@ -12,7 +12,7 @@ E:\bianjie-workspace
 ├─ apps/app         Flutter Android 移动端
 ├─ docs             项目和协作文档
 ├─ AGENTS.md        AI 和开发者必须遵守的规范
-└─ TOOL_DEVELOPMENT_BOARD.md
+└─ TOOL_DEVELOPMENT_BOARD.md    共享表字段模板/离线参考
 ~~~
 
 前后端在同一个仓库中，但需要分别启动。
@@ -75,7 +75,7 @@ AGENTS.md
 docs/developer-first-startup.zh-CN.md
 docs/developer-tool-workflow.zh-CN.md
 docs/administrator-workflow.zh-CN.md
-TOOL_DEVELOPMENT_BOARD.md
+共享工具开发表（链接由管理员提供）
 ~~~
 
 首次启动验证可以暂时停留在 main，但不要在 main 修改业务代码或提交。正式开发工具前必须有 GitHub Issue、管理员批准和个人分支。
@@ -369,7 +369,7 @@ Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue
 -> 读取 AGENTS.md 和开发者流程
 -> 让 AI 根据截图做预分析
 -> 创建 Tool Development Request Issue
--> 等管理员批准并登记看板
+-> 等管理员批准并登记共享工具开发表
 -> 创建个人分支
 -> 开发、自动测试和 USB 真机验收
 -> 创建 PR

@@ -15,7 +15,7 @@
 5. CI、代码审查、数据库检查和必要的真机抽测都完成。
 6. 密钥、用户数据、本地配置和构建产物没有进入 Git。
 7. 合并顺序可控，合并后 `main` 仍然可运行。
-8. 任务看板、Issue、PR 和实际代码状态一致。
+8. 共享工具开发表、Issue、PR 和实际代码状态一致。
 
 管理员不应替开发者完成以下责任：
 
@@ -31,7 +31,7 @@
 | Organization | 团队成员和仓库的上层组织 | 邀请成员、控制角色 |
 | Repository | 前后端 monorepo | 设置规则、Actions 和合并方式 |
 | Issue | 开发前的任务申请 | 澄清、批准、分配任务 ID |
-| `TOOL_DEVELOPMENT_BOARD.md` | 仓库内任务与共享资源台账 | 管理员维护 |
+| 共享工具开发表 | 实时任务、共享资源和迁移占用台账 | 管理员维护 |
 | Branch | 一项任务的独立代码线 | 检查命名、来源和同步状态 |
 | Pull Request | 从个人分支申请合并到 `main` | 审查、要求修改、批准、合并 |
 | GitHub Actions | 自动格式、测试、安全和迁移检查 | 查看失败原因，不手工伪造通过 |
@@ -154,7 +154,7 @@ ready-to-merge
 blocked
 ```
 
-标签用于筛选，不替代 Issue 状态、看板记录或 GitHub Review。
+标签用于筛选，不替代 Issue 状态、共享表记录或 GitHub Review。
 
 ## 四、收到工具开发 Issue 后怎么处理
 
@@ -187,7 +187,7 @@ Issue 中填写“待 AI/管理员确认”是允许的。管理员应做架构�
 
 ```text
 你作为边界 AI 仓库的架构审查助手，请读取 AGENTS.md、
-TOOL_DEVELOPMENT_BOARD.md、GitHub Issue #<编号>、全部参考截图，
+管理员共享工具开发表、GitHub Issue #<编号>、全部参考截图，
 以及工具目录、动态表单、ToolExecutorRegistry、相关 executor、
 tool_runs、artifact、Flutter repository/provider/page 和 Flyway 代码。
 
@@ -218,7 +218,7 @@ git pull --ff-only origin main
 rg "建议的-tool-id|建议的-operation" .
 ```
 
-同时查看 `TOOL_DEVELOPMENT_BOARD.md`：
+同时查看管理员维护的共享工具开发表；字段模板和离线参考为 `TOOL_DEVELOPMENT_BOARD.md`：
 
 - 是否已有相同 `toolId`。
 - 是否有人占用同一 executor 或共享 Flutter 页面。
@@ -257,19 +257,15 @@ rg "建议的-tool-id|建议的-operation" .
 
 尚未批准时添加 `architecture-review` 或 `blocked` 标签；批准后保持 `tool-request`，并在 Issue 评论中写清分支名和约束。
 
-## 五、管理员如何登记任务看板
+## 五、管理员如何登记共享工具开发表
 
-`TOOL_DEVELOPMENT_BOARD.md` 由管理员维护。由于 `main` 受保护，看板修改也应通过一个小型管理员 PR 合并，不能直接 push。
+共享工具开发表是日常任务状态的实时来源，建议使用腾讯文档、企业微信在线表格、QQ/微信共享 Excel 或团队确认的其他在线表格。管理员应把链接固定在团队群公告或仓库说明中。表格不得记录 API Key、密码、完整数据库连接密码或用户隐私。
 
-### 5.1 创建看板管理分支
+根目录 `TOOL_DEVELOPMENT_BOARD.md` 只提供字段模板和离线参考。除非修改模板、制作备份或共享表暂时不可用，否则状态变化不需要修改 Git 文件，也不需要创建管理员 PR。
 
-```powershell
-git switch main
-git pull --ff-only origin main
-git switch -c admin/<姓名>/assign-tool-<编号>
-```
+### 5.1 Issue 批准后立即登记
 
-在当前任务表新增一行，至少填写：
+在共享表的任务表新增一行，至少填写：
 
 - Task ID
 - Owner
@@ -283,19 +279,27 @@ git switch -c admin/<姓名>/assign-tool-<编号>
 - 状态“需求确认”或“开发中”
 - 更新时间
 
-如果涉及数据库，在 Flyway 迁移占用表登记迁移目的，但不要过早分配短版本 `V3`、`V4`。
+如果涉及数据库，在共享表的 Flyway 迁移占用表登记迁移目的，但不要过早分配短版本 `V3`、`V4`。登记完成后，在 Issue 中回复任务 ID、负责人、分支和已占用资源，开发者才可以开始编码。
 
-提交、推送并建立一个只修改看板的小 PR：
+多人任务较多时，可以一次登记一批已批准任务。共享表由管理员或指定协调人编辑，普通开发者只通过 Issue/PR 提交信息，不直接改表结构或删除记录。
 
-```powershell
-git add TOOL_DEVELOPMENT_BOARD.md
-git commit -m "chore(board): assign TOOL-<编号>"
-git push -u origin admin/<姓名>/assign-tool-<编号>
-```
+### 5.2 什么时候更新共享表
 
-管理员自己的看板 PR 同样等待 Required checks。合并后在 Issue 中通知开发者可以开始编码。
+不需要记录每次评论、每次提交和每次 CI 变化。建议只记录以下重要状态：
 
-多人任务较多时，可以把同一批已批准任务合并成一个小型看板 PR，但不得让开发者在登记合并前开始占用同一 `toolId` 或共享文件。
+- 需求确认/开发中。
+- 开发者自测。
+- PR 审查中。
+- 退回修改或阻塞。
+- 等待合并、已合并、已验收、已取消。
+- Flyway 最终编号确定。
+- 共享数据库执行并锁定迁移。
+
+状态变化可以实时修改共享表，不需要 Git commit/PR。管理员可以每天或每批任务集中更新，Issue 和 PR 保留完整讨论与代码审查历史。
+
+### 5.3 共享表不可用时的临时方案
+
+如果共享表暂时无法访问，管理员可以临时在 `TOOL_DEVELOPMENT_BOARD.md` 登记，或在 Issue 中明确记录任务占用。共享表恢复后，应补回记录。只有这种离线备份才需要通过管理员分支和 PR 合并到 `main`。
 
 ## 六、开发期间管理员怎么管理
 
@@ -309,7 +313,7 @@ git push -u origin admin/<姓名>/assign-tool-<编号>
 4. 是否有更早的 PR 合并，导致后续分支落后于 `main`。
 5. 开发者是否把“占位”误称为“真实可用”。
 
-如果需求变化，要求开发者先在原 Issue 说明：变化原因、新文件、新数据库影响和验收变化。管理员批准后再更新看板；不要通过聊天口头扩大范围而不留下记录。
+如果需求变化，要求开发者先在原 Issue 说明：变化原因、新文件、新数据库影响和验收变化。管理员批准后再更新共享表；不要通过聊天口头扩大范围而不留下记录。Issue 是需求依据，共享表是状态和资源摘要。
 
 ## 七、PR 到达后的 GitHub 页面操作
 
@@ -453,7 +457,7 @@ CI 失败时：
 
 涉及数据库的 PR 需要额外执行：
 
-1. 对照 Issue 和看板确认数据库变化已提前登记。
+1. 对照 Issue 和共享表确认数据库变化已提前登记。
 2. 确认没有修改、重命名或删除已经执行的迁移。
 3. 确认新 SQL 在固定目录：
 
@@ -553,7 +557,7 @@ git push
 
 管理员在 PR 正文的 `Administrator Checklist` 记录以下事实，但真正的控制仍是 Review 和 Ruleset：
 
-- [ ] Task 已登记到 `TOOL_DEVELOPMENT_BOARD.md`。
+- [ ] Task 已登记到管理员共享工具开发表。
 - [ ] `toolId`、executor/operation 和公共文件与批准 Issue 一致。
 - [ ] PR 已同步最新 `main`，没有未解决冲突。
 - [ ] 三个 Required result 在最新提交上通过。
@@ -638,17 +642,17 @@ Repository
 
 确认 `main` 上新触发的三个工作流没有失败。PR CI 通过不代表合并后的分支事件一定不会暴露问题。
 
-### 15.2 更新 Issue 和任务看板
+### 15.2 更新 Issue 和共享工具开发表
 
 如果 PR 描述包含正确的 `Closes #<编号>`，Issue 会在合并后自动关闭。管理员仍应检查：
 
 - Issue 是否关闭。
 - PR 是否正确关联。
 - 是否需要创建后续限制/缺陷 Issue。
-- 看板状态是否从“等待合并”更新为“已合并”或真机集成后“已验收”。
-- PR 链接、最终 Flyway 文件和更新时间是否写入看板。
+- 共享表状态是否从“等待合并”更新为“已合并”或真机集成后“已验收”。
+- PR 链接、最终 Flyway 文件和更新时间是否写入共享表。
 
-看板更新仍通过小型管理员分支和 PR 完成。为了减少管理 PR 数量，可以按当天或一批合并任务集中更新状态，但不能让看板长期失真。
+共享表状态由管理员直接更新，不需要为每个状态创建 Git PR。为了保持一致，应在合并后当天更新共享表，并把 PR 链接、最终 Flyway 文件和验收结果写入对应行。只有模板或离线备份变化才需要 Git PR。
 
 ### 15.3 删除分支和通知团队
 
@@ -713,7 +717,7 @@ CI 只覆盖自动测试。管理员应 Request changes，记录真机复现步�
 
 ### 17.5 开发者长期无响应
 
-在 Issue 和 PR 标记 `blocked`，说明截止时间和缺失内容。确认不再继续后关闭 PR、将看板标为“已取消”，释放 `toolId`、公共文件和未执行的迁移占用。删除分支前先确认没有需要保留的工作。
+在 Issue 和 PR 标记 `blocked`，说明截止时间和缺失内容。确认不再继续后关闭 PR、将共享表标为“已取消”，释放 `toolId`、公共文件和未执行的迁移占用。删除分支前先确认没有需要保留的工作。
 
 ### 17.6 错误合并进入 main
 
@@ -725,7 +729,7 @@ CI 只覆盖自动测试。管理员应 Request changes，记录真机复现步�
 
 - Open Issues 是否有长期未分配或缺少回复的任务。
 - Open PRs 是否长期失败、落后 `main` 或等待审查。
-- 看板状态是否与 Issue/PR 一致。
+- 共享表状态是否与 Issue/PR 一致。
 - 公共文件和 Flyway 占用是否可以释放。
 - Actions 是否出现重复失败或耗时明显增长。
 - 组织成员权限是否仍符合职责，离开项目的成员是否已移除。
@@ -741,7 +745,7 @@ CI 只覆盖自动测试。管理员应 Request changes，记录真机复现步�
 -> AI 辅助架构审查，管理员核实代码依据
 -> 确认 toolId、executor/operation、公共文件和数据库影响
 -> 在 Issue 留批准评论
--> 管理员通过小 PR 登记 TOOL_DEVELOPMENT_BOARD.md
+-> 管理员在共享工具开发表登记任务
 -> 通知开发者从最新 main 创建个人分支
 -> 开发期间管理范围变化和共享文件冲突
 -> PR 到达后检查描述、Issue 关联和变更范围
@@ -753,5 +757,5 @@ CI 只覆盖自动测试。管理员应 Request changes，记录真机复现步�
 -> Approve
 -> Squash and merge
 -> 检查 main CI
--> 更新看板和 Issue，删除分支，通知其他开发者同步 main
+-> 更新共享表和 Issue，删除分支，通知其他开发者同步 main
 ```

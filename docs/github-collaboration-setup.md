@@ -125,10 +125,10 @@ Do not add placeholder usernames. Add CODEOWNERS only after real GitHub accounts
 
 面向开发者的逐步中文操作、Issue 预分析提示词、AI 开发提示词和 PR 提示词见 `docs/developer-tool-workflow.zh-CN.md`。
 
-面向管理员的成员权限、Issue 审批、任务看板、PR Review、CI、Flyway、真机抽测、Squash Merge 和异常处理见 `docs/administrator-workflow.zh-CN.md`。
+面向管理员的成员权限、Issue 审批、共享工具开发表、PR Review、CI、Flyway、真机抽测、Squash Merge 和异常处理见 `docs/administrator-workflow.zh-CN.md`。
 1. Developer opens a **Tool Development Request** Issue and attaches sanitized reference screenshots.
 2. Administrator confirms scope, tool IDs, executor/operations, shared files, and migration need.
-3. Administrator adds one row to `TOOL_DEVELOPMENT_BOARD.md` and replies to the Issue with the assigned task ID and branch name.
+3. Administrator adds one row to the shared tool development table and replies to the Issue with the assigned task ID and branch name.
 4. Developer creates a personal branch from the latest `main`, implements no more than three approved tools, and self-tests.
 5. Developer opens a PR using the template and links the Issue with `Closes #<issue-number>`.
 6. Actions run automatically. The developer fixes failures on the same personal branch.
@@ -139,14 +139,15 @@ Do not add placeholder usernames. Add CODEOWNERS only after real GitHub accounts
 
 ## Board ownership
 
-`TOOL_DEVELOPMENT_BOARD.md` is already the shared task register stored in Git. Do not create another spreadsheet unless the team later needs reporting or portfolio planning beyond engineering coordination.
+The shared tool development table is the daily task register. `TOOL_DEVELOPMENT_BOARD.md` is its field template and optional Git backup. Keep the shared table URL pinned in the team chat; do not put passwords, private tokens, or sensitive database credentials in it.
 
 To avoid Markdown merge conflicts:
 
-- Developers submit/update information in GitHub Issues and PRs.
-- The administrator, or a specifically assigned coordinator, edits the board.
-- Board-only edits may be committed in a small administration PR.
-- The task's feature PR should not rewrite unrelated board rows.
+- Developers submit requirements and delivery information in GitHub Issues and PRs.
+- The administrator, or a specifically assigned coordinator, edits the shared table.
+- Status-only changes do not require a Git commit or PR. Batch meaningful changes in the shared table.
+- The task's feature PR should not rewrite unrelated shared-table records.
+- Update `TOOL_DEVELOPMENT_BOARD.md` in Git only when changing the field template, creating an offline backup, or when the shared table is temporarily unavailable.
 
 ## First test PR
 
